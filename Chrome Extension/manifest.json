@@ -1,0 +1,14 @@
+{
+  "manifest_version": 2,
+
+  "name": "SproutCore Debug",
+  "description": "This extension adds additional debugging tools for SproutCore applications.  Select an element in the elements pane and its backing view instance is available in the console with $0v and its backing parent view is available as $0pv.  This also adds a useful panel to the elements pane which contains important information about the selected element's view instance.",
+  "version": "1.0",
+
+  "devtools_page": "devtools.html",
+
+  "icons": { "16": "icon16.png",
+           "48": "icon48.png",
+          "128": "icon128.png" }
+
+}

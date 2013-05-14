@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>#!/usr/bin/ruby
+
+BASE = "#{ENV['TM_BUNDLE_SUPPORT'].gsub(' ','\ ')}/lib/jsdoc-toolkit"
+JS_RUN_JAR = "#{BASE}/jsrun.jar"
+RUN_JS = "#{BASE}/app/run.js"
+FILE = ENV['TM_FILEPATH']
+TEMPLATE = "#{BASE}/templates/codeview"
+OUTPUT = "/Library/WebServer/Documents/sc_docs"
+LOG_FILE = "/tmp/sc_docs_output"
+
+if not File.directory? "/Library/WebServer/Documents/sc_docs"
+  Dir.mkdir "/Library/WebServer/Documents/sc_docs"
+end
+
+`rm -rf #{OUTPUT}`
+`java -jar -Xmx256m #{JS_RUN_JAR} #{RUN_JS} #{FILE} -t=#{TEMPLATE} --allfunctions -v -d=#{OUTPUT} -o=#{LOG_FILE}`
+#puts "java -jar -Xmx256m #{JS_RUN_JAR} #{RUN_JS} #{FILE} -t=#{TEMPLATE} --allfunctions -v -d=#{OUTPUT} -o=#{LOG_FILE}"
+puts "&lt;html&gt;&lt;head&gt;&lt;script&gt;window.location=\"http://localhost/sc_docs/index.html\";window.innerWidth=400;window.innerWidth=900;&lt;/script&gt;&lt;/head&gt;&lt;/html&gt;"</string>
+	<key>input</key>
+	<string>none</string>
+	<key>keyEquivalent</key>
+	<string>^@g</string>
+	<key>name</key>
+	<string>Generate Docs for Current File</string>
+	<key>output</key>
+	<string>showAsHTML</string>
+	<key>scope</key>
+	<string>Buildfile, source.js, source.prototype.js</string>
+	<key>uuid</key>
+	<string>FC620A73-5A1E-430D-8184-09E33877E096</string>
+</dict>
+</plist>

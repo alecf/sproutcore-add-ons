@@ -1,0 +1,13 @@
+#status {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    border: 1.5px solid steelblue;
+    width: 60%;
+    height: 10em;
+    overflow: auto;
+    background-color: white;
+    box-shadow: 3px 3px 5px #ccc;
+    padding: 3px;
+}
+

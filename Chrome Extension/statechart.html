@@ -1,0 +1,75 @@
+<html>
+    <head>
+        <title>Statecharts</title>
+        <link rel="stylesheet" href="shared.css">
+        <style>
+         .node {
+             cursor: pointer;
+         }
+         .node circle, .node rect {
+             fill: #fff;
+             stroke: steelblue;
+             stroke-width: 1.5px;
+         }
+
+         .link {
+             fill: none;
+             stroke: #ccc;
+             stroke-width: 1px;
+         }
+
+         .link.active {
+             stroke: #000;
+             stroke-width: 1.5px;
+         }
+
+         .node .state-entered {
+             fill: #ccc;
+         }
+         
+         .node .state-current {
+             fill: #0f0;
+         }
+
+         .node .state-concurrent {
+             stroke: #00f;
+         }
+
+         .state-group {
+             padding-left: 10px;
+         }
+         .state-name {
+             font-weight: bold;
+         }
+
+        </style> 
+    </head>
+    <body>
+        <h1>Statecharts</h1>
+        <div id="console">
+            
+        </div>
+        <div>
+            <div id="status">
+                (status here)
+            </div>
+            <div>
+                Update every:
+                <select id="updateInterval">
+                    <option value="0.25">0.25</option>
+                    <option value="0.5">0.5</option>
+                    <option value="1.0" selected>1.0</option>
+                    <option value="2.0">2.0</option>
+                    <option value="4.0">4.0</option>
+                    <option value="0">None</option>
+                </select>
+                seconds.
+            </div>
+            <div id="statechart">
+
+            </div>
+            <script src="d3.v3.min.js"></script>
+            <script src="eval.js"></script>
+            <script src="statechart.js"></script>
+    </body>
+</html>

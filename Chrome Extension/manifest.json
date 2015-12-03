@@ -3,7 +3,7 @@
 
   "name": "SproutCore Debug",
   "description": "Additional debugging tools for developing SproutCore applications.",
-  "version": "1.0.2",
+  "version": "1.0.3",
 
   "devtools_page": "devtools.html",
 

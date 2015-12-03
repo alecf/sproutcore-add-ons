@@ -10,25 +10,26 @@ var optimizedResize = (function() {
         running = false;
 
     // fired on resize event
-    function resize() {
+    function resize(e) {
 
         if (!running) {
             running = true;
 
+            var runAllCallbacks = runCallbacks.bind(this, e);
             if (window.requestAnimationFrame) {
-                window.requestAnimationFrame(runCallbacks);
+                window.requestAnimationFrame(runAllCallbacks);
             } else {
-                setTimeout(runCallbacks, 66);
+                setTimeout(runAllCallbacks, 66);
             }
         }
 
     }
 
     // run the actual callbacks
-    function runCallbacks() {
+    function runCallbacks(e) {
 
         callbacks.forEach(function(callback) {
-            callback();
+            callback(e);
         });
 
         running = false;
@@ -48,13 +49,13 @@ var optimizedResize = (function() {
         add: function(callback) {
             if (!callbacks.length) {
                 window.addEventListener('resize', resize);
-<            }
+            }
             addCallback(callback);
         }
     }
 }());
 
 // start process
-optimizedResize.add(function() {
-    console.log('Resource conscious resize callback!')
-});
+// optimizedResize.add(function() {
+//     console.log('Resource conscious resize callback!')
+// });

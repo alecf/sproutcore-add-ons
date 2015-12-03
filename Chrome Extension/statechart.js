@@ -4,8 +4,15 @@ var HEIGHT = 400,
     WIDTH = 900;
 var MARGIN = 30;
 var SHAPE_HEIGHT = 6;
-var SHAPE_WIDTH = SHAPE_HEIGHT * 3;
+var SHAPE_WIDTH = SHAPE_HEIGHT * 2;
 var SHAPE_RADIUS = SHAPE_HEIGHT/2;
+
+// Sizes the current SVG and tree to the visible window
+function resizeContent() {
+    svg.attr('width', document.body.clientWidth - 2*MARGIN);
+    stateTree.size([parseFloat(svg.attr('width')) - 2*MARGIN,
+                    parseFloat(svg.attr('height')) - 2*MARGIN]);
+}
 
 var stateTree = d3.layout.tree()
     .size([WIDTH-MARGIN, HEIGHT-MARGIN])
@@ -17,12 +24,14 @@ var stateTree = d3.layout.tree()
 var svg = d3.select('#statechart')
     .append('svg')
     .attr('height', HEIGHT + 2*MARGIN)
-    .attr('width', WIDTH + 2*MARGIN)
+    .attr('width', WIDTH + 2*MARGIN);
+
+var chart = svg
     .append('g')
     .attr('transform', 'translate(' + MARGIN + ', ' + MARGIN + ')');
 
-var linkContainer = svg.append('g').classed('links', true);
-var nodeContainer = svg.append('g').classed('nodes', true);
+var linkContainer = chart.append('g').classed('links', true);
+var nodeContainer = chart.append('g').classed('nodes', true);
 
 function dump(s) {
     document.querySelector('#console').innerHTML = s;
@@ -37,10 +46,8 @@ dump('almost ready');
 var KEEP_STATUS = true;
 
 function maybeClearStatus() {
-    console.log('I might clear status: ' + KEEP_STATUS);
     KEEP_STATUS = false;
     setTimeout(function() {
-        console.log('actually clearing: ' + KEEP_STATUS);
         if (!KEEP_STATUS) {
             updateStatus('');
         }
@@ -101,7 +108,7 @@ function isNotString(s) { return !isString(s); }
 // now construct html as a sort of tree
 function makeStateTree(states, stripPrefix) {
     var html = '';
-    var strings = states.filter(isString);
+    var strings = states ? states.filter(isString) : [];
     var arrays = states.filter(isNotString);
     strings.forEach(function(statePath) {
         var path = statePath;
@@ -153,7 +160,10 @@ function update(source) {
     var nodes = stateTree.nodes(source);
     var links = stateTree.links(nodes);
 
-    d3.select('#status').html(makeStateTree(getCurrentStates(source)));
+    var states = getCurrentStates(source);
+    if (!isString(states)) {
+        d3.select('#current-states').html(makeStateTree(states));
+    }
     
     // links first so they're under the shapes
     var link = linkContainer.selectAll('path.link')
@@ -266,9 +276,10 @@ function findStateChart() {
     return null;
 }
 var functions = [dumpState, findStateChart];
+var LATEST_CHART = null;
 function queryAndRefresh() {
     dump('Loading statechart...');
-    console.log('trying to load from ', window);
+    //console.log('trying to load from ', window);
     chrome.devtools.inspectedWindow.eval(
             makeEvalCall('dumpState(findStateChart())', functions),
         function(result, isException) {
@@ -278,6 +289,7 @@ function queryAndRefresh() {
                 dump('statechart loaded.');
                 if (result)
                     update(result);
+                LATEST_RESULT = result;
             }
             
             scheduleNextRefresh();
@@ -285,10 +297,16 @@ function queryAndRefresh() {
 }
 
 function init() {
-
+    resizeContent();
     queryAndRefresh();
 
 }
 
 
 window.requestAnimationFrame(init);
+
+optimizedResize.add(function(e) {
+    console.log('Got update: ', e);
+    resizeContent();
+    update(LATEST_RESULT);
+})
